@@ -66,11 +66,3 @@ func readFully(conn net.Conn) ([]byte, error) {
 	}
 	return result.Bytes(), nil
 }
-
-/*
-	// 可以通过 ParseIP 函数验证 IP 地址的有效性
-	func net.ParseIP()
-	// 根据域名查找对应 IP 地址
-	func ResolveIPAddr(net, addr string) (*IPAddr, error)
-	func LookupHost(name string) (cname string, addrs []string, err error)
-*/
