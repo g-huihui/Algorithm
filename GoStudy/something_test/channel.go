@@ -52,3 +52,36 @@ func TestChannel() {
 	}
 	// Print: nil
 }
+
+//
+// ChannelPrint
+//  @Description: 使用channel按照顺序打印dog fish cat指定次数
+//  @param num 打印次数
+//
+func ChannelPrint(num int) {
+
+	var fun = func(c chan<- string, str string) {
+		for i := 0; i < num; i++ {
+			c <- str
+		}
+	}
+
+	var (
+		dogChan  = make(chan string)
+		fishChan = make(chan string)
+		catChan  = make(chan string)
+	)
+	go fun(dogChan, "dog")
+	go fun(fishChan, "fish")
+	go fun(catChan, "cat")
+
+	for i := 0; i < num; i++ {
+		var str string
+		str = <-dogChan
+		println(str)
+		str = <-fishChan
+		println(str)
+		str = <-catChan
+		println(str)
+	}
+}
