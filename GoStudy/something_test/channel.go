@@ -6,7 +6,11 @@
 
 package something_test
 
-import "fmt"
+import (
+	"fmt"
+	"sync/atomic"
+	"time"
+)
 
 func TestChannel() {
 	type Test struct {
@@ -84,4 +88,43 @@ func ChannelPrint(num int) {
 		str = <-catChan
 		println(str)
 	}
+}
+
+//
+// ChannelPrint2
+//  @Description: 使用3个channel按照顺序打印每个channel中的数据
+//
+func ChannelPrint2() {
+
+	var flag int32 = 0
+
+	var send = func(ch chan<- int, begin int) {
+		for num := begin; ; num += 3 {
+			ch <- num
+			time.Sleep(time.Second)
+		}
+	}
+
+	var printNum = func(ch <-chan int, flagNum int32) {
+		for {
+			if atomic.LoadInt32(&flag) == flagNum {
+				println(<-ch)
+				atomic.StoreInt32(&flag, (flagNum+1)%3)
+			}
+		}
+	}
+
+	var ch1 = make(chan int)
+	var ch2 = make(chan int)
+	var ch3 = make(chan int)
+
+	go send(ch1, 0)
+	go send(ch2, 1)
+	go send(ch3, 2)
+
+	go printNum(ch1, 0)
+	go printNum(ch2, 1)
+	go printNum(ch3, 2)
+
+	select {}
 }
