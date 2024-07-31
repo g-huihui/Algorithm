@@ -6,6 +6,8 @@
 
 package main
 
+import "fmt"
+
 // 和为n的k个数组合
 func combinationSum3(k int, n int) [][]int {
 	var res [][]int
@@ -27,4 +29,9 @@ func backtrack3(k int, n int, start int, path []int, res *[][]int) {
 		backtrack3(k, n-num, num+1, path, res)
 		path = path[:len(path)-1]
 	}
+}
+
+func main() {
+	fmt.Println(combinationSum3(3, 7)) // [[1 2 4]]
+	fmt.Println(combinationSum3(3, 9)) // [[1 2 6] [1 3 5] [2 3 4]]
 }

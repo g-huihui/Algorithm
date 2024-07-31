@@ -6,8 +6,18 @@
 
 package main
 
-import "sort"
+import (
+	"fmt"
+	"sort"
+)
 
+//
+// combinationSum2
+//  @Description:
+//  @param candidates 每个数字在每个组合中只能使用 一次
+//  @param target
+//  @return [][]int
+//
 func combinationSum2(candidates []int, target int) [][]int {
 	var res [][]int
 	var path []int
@@ -32,4 +42,9 @@ func backtrack2(candidates []int, target int, index int, path []int, res *[][]in
 		backtrack2(candidates, target-candidates[i], i+1, path, res)
 		path = path[:len(path)-1]
 	}
+}
+
+func main() {
+	fmt.Println(combinationSum2([]int{10, 1, 2, 7, 6, 1, 5}, 8)) // [[1 1 6] [1 2 5] [1 7] [2 6]]
+	fmt.Println(combinationSum2([]int{2, 5, 2, 1, 2}, 5))        // [[1 2 2] [5]]
 }

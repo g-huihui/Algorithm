@@ -6,8 +6,18 @@
 
 package main
 
-import "sort"
+import (
+	"fmt"
+	"sort"
+)
 
+//
+// combinationSum
+//  @Description:
+//  @param candidates 无重复元素的数组 同一个数字可以无限制重复被选取
+//  @param target
+//  @return [][]int
+//
 func combinationSum(candidates []int, target int) [][]int {
 	var res [][]int
 	var path []int
@@ -34,8 +44,14 @@ func backtrack(candidates []int, target int, start int, path []int, res *[][]int
 		if target < candidates[i] { // 说明当前组合已经不合适 可以结束当前分支了
 			break
 		}
-		path = append(path, candidates[i])
+		path = append(path, candidates[i]) // flag
 		backtrack(candidates, target-candidates[i], i, path, res)
-		path = path[:len(path)-1] // 对39行的操作进行回滚 继续下一个candidates数据尝试
+		path = path[:len(path)-1] // 对flag行的操作进行回滚 继续下一个candidates数据尝试
 	}
+}
+
+func main() {
+	fmt.Println(combinationSum([]int{2, 3, 6, 7}, 7)) // [[2 2 3] [7]]
+	fmt.Println(combinationSum([]int{2, 3, 5}, 8))    // [[2 2 2 2] [2 3 3] [3 5]]
+	fmt.Println(combinationSum([]int{2}, 1))          // []
 }
