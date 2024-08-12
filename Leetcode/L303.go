@@ -11,7 +11,7 @@ type NumArray struct {
 	SumNums []int
 }
 
-func Constructor(nums []int) NumArray {
+func NumArrayConstructor(nums []int) NumArray {
 	var res NumArray
 	res.Nums = make([]int, len(nums))
 	res.SumNums = make([]int, len(nums))
