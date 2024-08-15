@@ -7,6 +7,7 @@
 package rand
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
 )
@@ -36,4 +37,33 @@ func RandChoice(count, between int) {
 		println("no")
 	}
 	println(yes, no)
+}
+
+//
+// RandChoiceWithString
+//  @Description: 可以指定选择的字符串
+//  @param count 随机次数
+//  @param yesStr 选择yes的字符串
+//  @param noStr 选择no的字符串
+//
+func RandChoiceWithString(count int, yesStr, noStr string) {
+	var yes, no int
+	rand.Seed(time.Now().UnixNano()) // 设置随机数种子
+	for i := 0; i < count; i++ {
+		r := rand.Intn(10) % 2 // 生成随机数 0 or 1
+		if r == 1 {
+			yes++
+		} else if r == 0 {
+			no++
+		} else {
+			panic(r)
+		}
+	}
+	var response = "my response is: "
+	if yes > no {
+		println(response, yesStr)
+	} else {
+		println(response, noStr)
+	}
+	fmt.Println("yesCount:", yes, "noCount:", no)
 }
