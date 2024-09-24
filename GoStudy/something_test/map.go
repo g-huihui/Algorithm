@@ -4,7 +4,7 @@
  * @Date: 2024-01-08 14:46
  */
 
-package something_test
+package something
 
 import (
 	"fmt"
@@ -95,4 +95,28 @@ func MapLength() {
 	fmt.Println(len(b)) // 0
 
 	// make(type, len, cap) cap == 0
+}
+
+func TestMapIsPointer() {
+	m1 := make(map[int]struct{})
+	testMapAppend(m1)
+	fmt.Println(len(m1)) // 2
+
+	m2 := make(map[int]struct{})
+	testMapPointAppend(&m2)
+	fmt.Println(len(m2)) // 4
+
+	// 结论: map是引用类型 传递指针和传递值的没有区别
+}
+
+func testMapAppend(m map[int]struct{}) {
+	m[1] = struct{}{}
+	m[4] = struct{}{}
+}
+
+func testMapPointAppend(m *map[int]struct{}) {
+	(*m)[1] = struct{}{}
+	(*m)[8] = struct{}{}
+	(*m)[9] = struct{}{}
+	(*m)[11] = struct{}{}
 }

@@ -4,7 +4,7 @@
  * @Date: 2024-01-08 14:57
  */
 
-package something_test
+package something
 
 import (
 	"fmt"

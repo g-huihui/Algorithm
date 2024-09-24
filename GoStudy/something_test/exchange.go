@@ -4,7 +4,7 @@
  * @Date: 2024-01-09 14:42
  */
 
-package something_test
+package something
 
 func ExchangeInt(a, b *int) {
 	*a = *a ^ *b

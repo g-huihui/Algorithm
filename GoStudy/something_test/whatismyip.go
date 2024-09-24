@@ -4,7 +4,7 @@
  * @Date: 2024-06-17 14:24
  */
 
-package something_test
+package something
 
 import (
 	"flag"
