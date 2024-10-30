@@ -1,0 +1,20 @@
+//指定proto3语法
+syntax = "proto3";
+
+//包名
+package say;
+
+// 必须填写 这里的意义为: 生成代码在../api目录 使用'api'作为package名
+option go_package = "./api;api";
+
+service Say {
+    rpc TestFunc(TestRequest) returns (TestResponse) {}
+}
+
+message TestRequest {
+    string name = 1;
+}
+
+message TestResponse {
+    string message = 1;
+}
