@@ -6,8 +6,37 @@
 
 package main
 
-// 暴力破解 超出时间限制
+// 2024-11-30 15:45 第二次尝试
 func minSubArrayLen(target int, nums []int) int {
+	var minDistance = len(nums)
+	var head, tail, total int
+	for {
+		if tail == len(nums) && total < target {
+			// 结束条件
+			break
+		}
+
+		if total < target {
+			total += nums[tail]
+			tail++
+		} else {
+			if minDistance > tail-head {
+				minDistance = tail - head
+			}
+			total -= nums[head]
+			head++
+		}
+	}
+
+	if minDistance == len(nums) && head == 0 {
+		return 0
+	}
+
+	return minDistance
+}
+
+// 暴力破解 超出时间限制
+func minSubArrayLen1(target int, nums []int) int {
 	var minDistance = len(nums)
 	var flag bool
 	for head := 0; head < len(nums); head++ {
