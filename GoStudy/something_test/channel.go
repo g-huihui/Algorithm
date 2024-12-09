@@ -8,6 +8,7 @@ package something
 
 import (
 	"fmt"
+	"sync"
 	"sync/atomic"
 	"time"
 )
@@ -57,11 +58,10 @@ func TestChannel() {
 	// Print: nil
 }
 
-//
 // ChannelPrint
-//  @Description: 使用channel按照顺序打印dog fish cat指定次数
-//  @param num 打印次数
 //
+//	@Description: 使用channel按照顺序打印dog fish cat指定次数
+//	@param num 打印次数
 func ChannelPrint(num int) {
 
 	var fun = func(c chan<- string, str string) {
@@ -90,10 +90,9 @@ func ChannelPrint(num int) {
 	}
 }
 
-//
 // ChannelPrint2
-//  @Description: 使用3个channel按照顺序打印每个channel中的数据
 //
+//	@Description: 使用3个channel按照顺序打印每个channel中的数据
 func ChannelPrint2() {
 
 	var flag int32 = 0
@@ -127,4 +126,60 @@ func ChannelPrint2() {
 	go printNum(ch3, 2)
 
 	select {}
+}
+
+// ChannelPrint3
+//
+//	@Description: 三个协程 1 打印a 2 打印b 3 打印c 输出字符串abc的数量
+//
+// @param n 输出字符串abc的数量
+func ChannelPrint3(n int) {
+	// 输入[1] 输出[abc]
+	// 输入[3] 输出[abcabcabc]
+
+	// 三个channel 分别存放a b c
+	var ch1 = make(chan string)
+	var ch2 = make(chan string)
+	var ch3 = make(chan string)
+
+	// 标记tag 0 1 2
+	var flag int32 = 0
+
+	// 全局等待
+	var w = sync.WaitGroup{}
+	w.Add(3) // 3个读取协程
+
+	// 发送函数 往channel无限发送
+	var sendFunc = func(ch chan<- string, str string) {
+		for {
+			ch <- str
+		}
+	}
+
+	go sendFunc(ch1, "a")
+	go sendFunc(ch2, "b")
+	go sendFunc(ch3, "c")
+
+	var printFunc = func(ch <-chan string, flagNum *int32, n int, w *sync.WaitGroup, tag int32) {
+		for {
+			select {
+			case str := <-ch:
+				if atomic.LoadInt32(flagNum) == tag {
+					fmt.Print(str)
+					atomic.StoreInt32(flagNum, (tag+1)%3)
+					n--
+					if n == 0 {
+						w.Done()
+						return
+					}
+				}
+			}
+		}
+	}
+
+	go printFunc(ch1, &flag, n, &w, 0)
+	go printFunc(ch2, &flag, n, &w, 1)
+	go printFunc(ch3, &flag, n, &w, 2)
+
+	w.Wait()
 }
