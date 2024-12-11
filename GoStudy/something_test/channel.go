@@ -183,3 +183,51 @@ func ChannelPrint3(n int) {
 
 	w.Wait()
 }
+
+// ChannelPrint4
+//
+//	@Description: N个协程 按序分别打印各自的序号
+//
+// @param n 协程数量
+// @param count 打印次数
+func ChannelPrint4(n int, count int) {
+
+	// 创建n个channel 并且往每个channel中都填满数据
+	var chs = make([]chan int, n)
+	for i := 0; i < n; i++ {
+		chs[i] = make(chan int)
+		go func(ch chan int, num int) {
+			for {
+				ch <- num
+			}
+		}(chs[i], i+1)
+	}
+
+	// 标记该哪个协程打印了
+	var flag int64
+
+	var w = sync.WaitGroup{}
+	w.Add(n)
+	// 定义打印协程的函数
+	var printFunc = func(ch <-chan int, tag int64) {
+		var c int
+		for num := range ch {
+			if atomic.LoadInt64(&flag) == tag {
+				print(num)
+				atomic.StoreInt64(&flag, (tag+1)%int64(n))
+				c++
+				if c == count {
+					w.Done()
+					return
+				}
+			}
+		}
+	}
+
+	// 开启n个协程
+	for i := 0; i < n; i++ {
+		go printFunc(chs[i], int64(i))
+	}
+
+	w.Wait()
+}
