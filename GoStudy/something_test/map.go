@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-// TestConcurrentMap 测试map并发触发panic问题
+// TestConcurrentMap 测试map并发触发panic问题 fatal error: concurrent map writes
 func TestConcurrentMap() {
 	m := make(map[int]int)
 	go func() {
@@ -41,6 +41,66 @@ func TestConcurrentMap() {
 			_ = m[i] // 读
 		}
 		fmt.Println("read done")
+	}()
+
+	time.Sleep(10 * time.Second)
+}
+
+func TestConcurrentMap2() {
+	// 测试map只并发读 不会出现panic
+	m := make(map[int]int)
+	m[1] = 1
+	m[2] = 2
+	m[30] = 30
+	m[40] = 40
+	for i := 0; i < 50; i++ {
+		go func() {
+			time.Sleep(1 * time.Second)
+			for j := 0; j < 1000; j++ {
+				_ = m[j] // 读
+			}
+			fmt.Println("read done")
+		}()
+	}
+
+	time.Sleep(10 * time.Second)
+}
+
+func TestConcurrentMap3() {
+	// 测试map只并发写 fatal error: concurrent map writes
+	m := make(map[int]int)
+	for i := 0; i < 50; i++ {
+		go func() {
+			time.Sleep(1 * time.Second)
+			for j := 0; j < 1000; j++ {
+				m[j] = j // 写
+			}
+			fmt.Println("write done")
+		}()
+	}
+
+	time.Sleep(10 * time.Second)
+}
+
+func TestConcurrentMap4() {
+	// 测试map只并发读 只有一个协程写 fatal error: concurrent map read and map write
+	m := make(map[int]int)
+	for i := 0; i < 50; i++ {
+		go func() {
+			time.Sleep(1 * time.Second)
+			for j := 0; j < 1000; j++ {
+				_ = m[j] // 读
+			}
+			fmt.Println("read done")
+		}()
+	}
+
+	go func() {
+		time.Sleep(1 * time.Second)
+		for j := 0; j < 10000; j++ {
+			m[j] = j // 写
+		}
+		fmt.Println("write done")
 	}()
 
 	time.Sleep(10 * time.Second)
