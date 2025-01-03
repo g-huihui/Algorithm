@@ -16,7 +16,7 @@ type NeighborSum struct {
 	IndexMap map[int]Index
 }
 
-func Constructor(grid [][]int) NeighborSum {
+func NeighborSumConstructor(grid [][]int) NeighborSum {
 	indexMap := make(map[int]Index)
 	for i := 0; i < len(grid); i++ {
 		for j := 0; j < len(grid[i]); j++ {
