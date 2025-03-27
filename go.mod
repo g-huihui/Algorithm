@@ -10,6 +10,7 @@ require (
 	github.com/bsm/sarama-cluster v2.1.15+incompatible
 	github.com/dubbogo/grpc-go v1.42.10
 	github.com/dubbogo/triple v1.2.2-rc3
+	github.com/fsnotify/fsnotify v1.6.0
 	github.com/go-ping/ping v1.1.0
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/tjfoc/gmsm v1.4.1

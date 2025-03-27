@@ -1,6 +1,6 @@
 /**
  * @Author: Gong Yanhui
- * @Description: 获取文件
+ * @Description: 获取文件的修改时间
  * @Date: 2024-11-09 14:31
  */
 
