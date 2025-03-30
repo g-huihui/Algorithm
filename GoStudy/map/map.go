@@ -4,7 +4,7 @@
  * @Date: 2024-01-08 14:46
  */
 
-package something
+package _map
 
 import (
 	"fmt"
